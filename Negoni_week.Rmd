@@ -55,7 +55,7 @@ print(xtable(venues_cats[venues_cats$Number>2,]), floating=FALSE)
 #Greater Portland Area Map  
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=6, results='asis'}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, results='asis'}
 require(ggmap)
 require(mapproj)
 
@@ -75,7 +75,7 @@ require(mapproj)
 
 #Downtown Map
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6}
 require(ggmap)
 require(mapproj)
 
@@ -108,5 +108,8 @@ require(xtable)
 
 venues_table=as.data.frame(venues[,c(1,3)])
 
-print(xtable(venues_table), floating=FALSE)  
+venues_table<-xtable(venues_table)
+
+
+print(venues_table, floating=FALSE)  
 ```
