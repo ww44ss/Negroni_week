@@ -7,7 +7,16 @@ Uses ggmap and Google maps as sources.
 
 ##Files:  
 __Negroni_week.csv__: a table of venues for Negroni week containing the following column names:
-Bar/Restaurant Name	Business Website	Business Address	Address Line 2	City	Postal / Zip Code	Charity	Type	latitude	longitude    
+Bar/Restaurant Name  
+Business Website  
+Business Address  
+Address Line 2  
+City  
+Postal / Zip Code  
+Charity  
+Type  
+latitude  
+longitude  
 
 
 The names of the venues were taken from the [Negroni Week](http://negroniweek.com/) website. The GPS coordinates were derived from [GPS Visualizer](http://www.gpsvisualizer.com/geocoder/) batch coder from MapQuest and Bing sources. The Type was a personal categorization.   
