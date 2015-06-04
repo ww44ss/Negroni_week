@@ -25,7 +25,7 @@ Only zip codes with three or more venues listed
 ```{r echo=FALSE, message=FALSE, results="asis"}
 require(xtable)
 venues_cats<-as.data.frame(t(table(venues$Postal...Zip.Code)))[,c(2,3)]
-colnames(venues_cats)<-c("Charity Type", "Number")
+colnames(venues_cats)<-c("Zip", "Number")
 
 print(xtable(venues_cats[venues_cats$Number>2,]), floating=FALSE)
 ```
@@ -47,7 +47,7 @@ require(mapproj)
         ## 
         map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, color="blue", size = 4) 
         map1<-map1+theme(legend.title=element_blank())
-        map1<-map1+ggtitle("Negroni Week Venues and Charity Type")
+        map1<-map1+ggtitle("Negroni Week Venues 2015")
         print(map1)
 ```
 
@@ -67,7 +67,7 @@ require(mapproj)
         ## 
         map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, size = 4, color="red") 
         map1<-map1+theme(legend.title=element_blank())
-        map1<-map1+ggtitle("Negroni Week Venues and Charity Type")
+        map1<-map1+ggtitle("Negroni Week Venues 2015")
         print(map1)
 ```
   
