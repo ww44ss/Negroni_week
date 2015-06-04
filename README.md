@@ -21,4 +21,7 @@ longitude
 
 The names of the venues were taken from the [Negroni Week](http://negroniweek.com/) website. The GPS coordinates were derived from [GPS Visualizer](http://www.gpsvisualizer.com/geocoder/) batch coder from MapQuest and Bing sources. The Type was a personal categorization.   
 __Negoni_week.RMD__: an R Markdown document generating the output (note mispelling)   
-__Negoni_week.pdf__: the program output.    
+__Negoni_week.pdf__: the program output.   
+
+
+Added SF data June 3 2015
