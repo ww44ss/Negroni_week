@@ -1,9 +1,34 @@
 ---
-title: "SF Negroni Week"
-author: "Winston Saunders"
-date: "June 3, 2015"
+title: "Negroni Week San Francisco"
+date: "June 2015"
 output: pdf_document
+
 ---
+
+\fontfamily{helvetica}
+\fontsize{12}{18}
+\selectfont
+
+```{r, echo=FALSE}
+Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
+```
+ 
+ 
+ 
+<br>  
+
+![Another data hack by data.Balloon](/Users/winstonsaunders/Documents/Negroni_week/data_Balloon_smallest.png)   
+
+<br> 
+==============
+  
+
+
+_Data Notes_: Venues were downloaded from the [Negroni Week](http://negroniweek.com) website and correlated to geolocations using [GPS Visualizer](http://www.gpsvisualizer.com/). Maps are produced by the __R__ _{ggmap}_ package.   
+  
+Information is offered without warranty.   
+
+
 
 ```{r, echo=FALSE}
 Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
@@ -13,25 +38,13 @@ venues<-read.csv(paste0(Directory, file))
 venues$index<-1:nrow(venues)
 
     ## center map
+    venues<-venues[venues$longitude < (-122.35),]
     mid_lon=(min(venues$longitude)+max(venues$longitude))/2
     mid_lat=(min(venues$latitude)+max(venues$latitude))/2
 ```
 
 
-
-#Number of venues by Zip Code  
-
-Only zip codes with three or more venues listed  
-
-```{r echo=FALSE, message=FALSE, results="asis"}
-require(xtable)
-venues_cats<-as.data.frame(t(table(venues$Postal...Zip.Code)))[,c(2,3)]
-colnames(venues_cats)<-c("Zip", "Number")
-
-print(xtable(venues_cats[venues_cats$Number>2,]), floating=FALSE, comment=FALSE)
-```
-
-#Area Map  
+\newpage
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, results='asis'}
@@ -41,18 +54,18 @@ require(mapproj)
 ##Subset data by crime
 ## here focus on only top crimes
         ##get map data
-        map <- get_map(source="google", maptype="roadmap", location = c(lon = mid_lon, lat = mid_lat), zoom = 12)
+        map <- get_map(source="google", maptype="roadmap", location = c(lon = mid_lon, lat = mid_lat), zoom = 13)
         ##generate map
         map1 <- ggmap(map) 
 
         ## 
-        map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, color="blue", size = 4) 
+        map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, color="darkred", size = 2, pch=18) 
         map1<-map1+theme(legend.title=element_blank())
-        map1<-map1+ggtitle("Negroni Week Venues 2015")
+        map1<-map1+ggtitle("San Francisco Negroni Week Venues 2015")
         print(map1)
 ```
 
-#Downtown Map
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6}
 require(ggmap)
@@ -64,22 +77,17 @@ require(mapproj)
         map1 <- ggmap(map) 
 
         ## 
-        map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, size = 3, color="red") 
+        map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, size = 3, color="darkred", pch=18) 
         map1<-map1+theme(legend.title=element_blank())
-        set.seed(8765309)
-        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=3, position = position_jitter(w = 0.0007, h = 0.0007))
-        map1<-map1+ggtitle("Negroni Week Venues 2015")
+        set.seed(8765308)
+        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=3, position = position_jitter(w = 0.0005, h = 0.0015))
+        map1<-map1+ggtitle("San Francisco Negroni Week Venues 2015 - zoom/index")
         print(map1)
 ```
   
     
       
         
-          
-            
-#Venue List   
-
-
 
 ```{r, echo=FALSE, results="asis", message=FALSE}
 
@@ -88,21 +96,29 @@ require(xtable)
 venues_table=as.data.frame(venues[,c(1,3)])
 
 
-venues_table1<-xtable(venues_table[1:40,])
-venues_table2<-xtable(venues_table[40:80,])
-venues_table3<-xtable(venues_table[80:110,])
+venues_table1<-xtable(venues_table[1:30,])
+venues_table2<-xtable(venues_table[31:60,])
+venues_table3<-xtable(venues_table[61:90,])
+venues_table4<-xtable(venues_table[91:109,])
 
+```
 
+```{r echo=FALSE, results="asis", message=FALSE}
 print(venues_table1, floating=FALSE, comment=FALSE)
-cat("/n")
+```
+
+```{r echo=FALSE, results="asis", message=FALSE}
 print(venues_table2, floating=FALSE, comment=FALSE)
-cat("/n")
+```
+
+```{r echo=FALSE, results="asis", message=FALSE}
 print(venues_table3, floating=FALSE, comment=FALSE)  
 ```
 
 
-```{r echo=FALSE}
-cat("maps by ggmap():/n")
-cat("D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal,
-  5(1), 144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf /n")
+```{r echo=FALSE, results="asis", message=FALSE}
+print(venues_table4, floating=FALSE, comment=FALSE)  
 ```
+
+
+
