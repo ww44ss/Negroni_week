@@ -23,8 +23,11 @@ Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
 ==============
   
 
+Summary: Negroni Week is an annual charity event, organized by the folks at Imbibe Magazine and Campari, to celebrate the very drinkable Negroni Cocktail. Negroni Week was launched in 2013, has raise money for charitable causes around the world, with over $120,000 raised for charities.  
+Locations are provided by the organizers as a set of bar names and addresses. Good for a local, but for those interested in exploring, a map is a handier data visualization. This analysis subsets the data and maps it for a given metro area. Two types of maps, indexed and no-index, are shown. 
 
-_Data Notes_: Venues were downloaded from the [Negroni Week](http://negroniweek.com) website and correlated to geolocations using [GPS Visualizer](http://www.gpsvisualizer.com/). Maps are produced by the __R__ _{ggmap}_ package.   
+
+Notes : Venues were downloaded from the [Negroni Week](http://negroniweek.com) website and correlated to geolocations using [GPS Visualizer](http://www.gpsvisualizer.com/). Maps are produced by the __R__ _{ggmap}_ package.   
   
 Information is offered without warranty.   
 
@@ -35,19 +38,29 @@ Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
 file<-"Negroni_week_SF.csv"
 
 venues<-read.csv(paste0(Directory, file))
-venues$index<-1:nrow(venues)
 
-    ## center map
+
+    ## filter points
     venues<-venues[venues$longitude < (-122.35),]
+    
+    ## find map center
     mid_lon=(min(venues$longitude)+max(venues$longitude))/2
     mid_lat=(min(venues$latitude)+max(venues$latitude))/2
+    
+    ## create a sort variable to order the indices
+    venues$sort<-(venues$longitude - (mid_lon-5))^2+(venues$latitude-(mid_lat-10))^2
+    venues<-venues[order(venues$sort),]
+    
+##add index   
+venues$index<-1:nrow(venues)
+rownames(venues)<-venues$index
 ```
 
 
 \newpage
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, results='asis'}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=7, results='asis', fig.align="center"}
 require(ggmap)
 require(mapproj)
 
@@ -61,13 +74,18 @@ require(mapproj)
         ## 
         map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, color="darkred", size = 2, pch=18) 
         map1<-map1+theme(legend.title=element_blank())
-        map1<-map1+ggtitle("San Francisco Negroni Week Venues 2015")
+        map1<-map1+ggtitle("San Francisco Negroni Week\nVenues 2015")
+        map1<-map1+ggtitle("San Francisco Negroni Week\nVenues 2015")
+        map1<-map1+theme(plot.title = element_text(size=20, vjust=1, lineheight=0.9))
+        map1<-map1+ theme(axis.ticks.y = element_blank(),axis.text.y = element_blank())
+        map1<-map1+ theme(axis.ticks.x = element_blank(),axis.text.x = element_blank())
+        map1<-map1+labs(x="", y="")
         print(map1)
 ```
 
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=7, fig.align="center"}
 require(ggmap)
 require(mapproj)
 
@@ -80,8 +98,12 @@ require(mapproj)
         map1<-map1 + geom_point(aes(x = longitude, y = latitude), data = venues, alpha = .8, size = 3, color="darkred", pch=18) 
         map1<-map1+theme(legend.title=element_blank())
         set.seed(8765308)
-        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=3, position = position_jitter(w = 0.0005, h = 0.0015))
-        map1<-map1+ggtitle("San Francisco Negroni Week Venues 2015 - zoom/index")
+        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=3.5, position = position_jitter(w = 0.002, h = 0.002))
+        map1<-map1+ggtitle("San Francisco Negroni Week\nVenues 2015")
+        map1<-map1+theme(plot.title = element_text(size=20, vjust=1, lineheight=0.9))
+        map1<-map1+ theme(axis.ticks.y = element_blank(),axis.text.y = element_blank())
+        map1<-map1+ theme(axis.ticks.x = element_blank(),axis.text.x = element_blank())
+        map1<-map1+labs(x="", y="")
         print(map1)
 ```
   
