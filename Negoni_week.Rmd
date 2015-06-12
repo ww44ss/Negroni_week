@@ -3,54 +3,59 @@ title: "Negroni Week PDX Venue Map"
 output: pdf_document
 ---
 
-__This map__ of the Portland area bars participating in [Negroni Week](negroniweek.com) is provided without warranty. 
+\fontfamily{Helvetica}
+\fontsize{12}{18}
+\selectfont
 
-###Note on methods:  
-1.  Venues were downloaded directly from the Negoni Week website.  
-2.  GPS coordinates were derived from online sources including Bing and Open Maps.  
-3.  Charity Type is categorized by me.  
+```{r, echo=FALSE}
+Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
+```
+ 
+ 
+ 
+<br>  
+
+![Another data hack by data.Balloon](/Users/winstonsaunders/Documents/Negroni_week/data_Balloon_smallest.png)   
+
+<br> 
+==============
+  
+
+\textbf{SUMMARY}: Negroni Week is an annual charity event, organized by the folks at Imbibe Magazine and Campari, to celebrate the very drinkable Negroni Cocktail. Negroni Week was launched in 2013, has raise money for charitable causes around the world, with over $120,000 raised for charities.  
+Locations are provided by the organizers as a set of bar names and addresses. Good for a local, but for those interested in exploring, a map is a handier data visualization. This analysis subsets the data and maps it for a given metro area. Two types of maps, indexed and no-index, are shown. 
+
+
+\textbf{NOTES}: Venues were downloaded from the [Negroni Week](http://negroniweek.com) website and correlated to geolocations using [GPS Visualizer](http://www.gpsvisualizer.com/). Maps are produced by the __R__ _{ggmap}_ package.   
+  
+\textit{Information is offered without warranty.}   
+ 
 
 ```{r, echo=FALSE}
 Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
 file<-"Negroni_week_PDX.csv"
 
 venues<-read.csv(paste0(Directory, file))
-venues$index<-1:nrow(venues)
+
 
 
     ## center map
     mid_lon=(min(venues$longitude)+max(venues$longitude))/2
     mid_lat=(min(venues$latitude)+max(venues$latitude))/2
 
-
+## create a sort variable to order the indices
+    venues$sort<-(venues$longitude - (mid_lon-5))^2+(venues$latitude-(mid_lat-10))^2
+    venues<-venues[order(venues$sort),]
+    
+##add index   
+venues$index<-1:nrow(venues)
+rownames(venues)<-venues$index
 
 ```
 
-#Number of venues by Charity Type.  
-
-```{r echo=FALSE, message=FALSE, results="asis", warning=FALSE}
-require(xtable)
-venues_cats<-as.data.frame(t(table(venues$Type)))[,c(2,3)]
-colnames(venues_cats)<-c("Charity Type", "Number")
-print(xtable(venues_cats), floating=FALSE, comment=FALSE)
-```
-
-#Number of venues by Zip Code  
-
-Only zip codes with three or more venues listed  
-
-```{r echo=FALSE, message=FALSE, results="asis"}
-require(xtable)
-venues_cats<-as.data.frame(t(table(venues$Postal...Zip.Code)))[,c(2,3)]
-colnames(venues_cats)<-c("Charity Type", "Number")
-
-print(xtable(venues_cats[venues_cats$Number>2,]), floating=FALSE, comment=FALSE)
-```
-
-#Greater Portland Area Map  
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6, results='asis'}
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=7, results='asis', fig.align="center"}
 require(ggmap)
 require(mapproj)
 
@@ -62,13 +67,16 @@ require(mapproj)
         map1 <- ggmap(map) 
 
         ## 
-        map1<-map1 + geom_point(aes(x = longitude, y = latitude, color=factor(Type)), data = venues, alpha = .8, size = 4) 
+        map1<-map1 + geom_point(aes(x = longitude, y = latitude, color=factor(Type)), data = venues, alpha = .8, size = 4)  
         map1<-map1+theme(legend.title=element_blank())
         map1<-map1+ggtitle("Negroni Week Venues and Charity Type")
+        map1<-map1+theme(plot.title = element_text(size=20, vjust=1, lineheight=0.9))
+        map1<-map1+ theme(axis.ticks.y = element_blank(),axis.text.y = element_blank())
+        map1<-map1+ theme(axis.ticks.x = element_blank(),axis.text.x = element_blank())
+        map1<-map1+labs(x="", y="")
         print(map1)
 ```
 
-#Downtown Map
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height=6}
 require(ggmap)
@@ -85,8 +93,12 @@ require(mapproj)
         map1<-map1 + geom_point(aes(x = longitude, y = latitude, color=factor(Type)), data = venues, alpha = .8, size = 4) 
         map1<-map1+theme(legend.title=element_blank())
         set.seed(8765309)
-        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=2.5, position = position_jitter(w = 0.0005, h = 0.0005))
+        map1<-map1+geom_text(data=venues, aes(x = longitude, y = latitude,label=index), size=2.5, position = position_jitter(w = 0.001, h = 0.001))
         map1<-map1+ggtitle("Negroni Week Venues and Charity Type")
+        map1<-map1+theme(plot.title = element_text(size=20, vjust=1, lineheight=0.9))
+        map1<-map1+ theme(axis.ticks.y = element_blank(),axis.text.y = element_blank())
+        map1<-map1+ theme(axis.ticks.x = element_blank(),axis.text.x = element_blank())
+        map1<-map1+labs(x="", y="")
         print(map1)
 ```
   
@@ -103,8 +115,8 @@ require(xtable)
 venues_table=as.data.frame(venues[,c(1,3)])
 
 
-venues_table1<-xtable(venues_table[1:40,])
-venues_table2<-xtable(venues_table[40:58,])
+venues_table1<-xtable(venues_table[1:30,])
+venues_table2<-xtable(venues_table[31:58,])
 
 
 
@@ -115,9 +127,5 @@ print(venues_table2, floating=FALSE, comment=FALSE)
 
  
 ```
-
-```{r echo=FALSE}
-cat("maps by ggmap():/n")
-cat("D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal,
-  5(1), 144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf /n")
-```
+ 
+ 
