@@ -18,7 +18,7 @@ Directory <- "/Users/winstonsaunders/Documents/Negroni_week/"
 ![Another data hack by data.Balloon](/Users/winstonsaunders/Documents/Negroni_week/data_Balloon_smallest.png)   
 
 <br> 
-==============
+
   
 
 \textbf{SUMMARY}: Negroni Week is an annual charity event, organized by the folks at Imbibe Magazine and Campari, to celebrate the very drinkable Negroni Cocktail. Negroni Week was launched in 2013, has raise money for charitable causes around the world, with over $120,000 raised for charities.  
